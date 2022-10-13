@@ -1,37 +1,26 @@
 const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
-const User = require("./models/user");
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  req.user = {
+    _id: "6346b8e4bd2851be6051147b",
+  };
 
-app.get("/users", (req, res) => {
-  User.find({})
-    .then((users) => res.send({ data: users }))
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
+  next();
 });
 
-app.get("/users/:id", (req, res) => {
-  User.findById(req.params.id)
-    .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
-});
-
-app.post("/users", (req, res) => {
-  const { name, about, avatar } = req.body;
-
-  User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
-});
+app.use("/users", require("./routes/users"));
+app.use("/cards", require("./routes/cards"));
 
 mongoose.connect("mongodb://localhost:27017/mestodb", {
   useNewUrlParser: true,
 });
 
-app.listen(3000, () => {
+app.listen(3001, () => {
   console.log("Слушаю");
 });

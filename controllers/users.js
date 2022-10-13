@@ -2,13 +2,22 @@ const User = require("../models/user");
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.send({ data: users }))
+    .then((users) =>
+      res.send(users)
+    )
     .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
 };
 
 module.exports.getUser = (req, res) => {
-  User.findById(req.params.id)
-    .then((user) => res.send({ data: user }))
+  User.findById(req.params.userId)
+    .then((user) =>
+      res.send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        _id: user._id,
+      })
+    )
     .catch(() => res.status(500).send({ message: "Произошла ошибка" }));
 };
 

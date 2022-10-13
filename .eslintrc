@@ -3,6 +3,7 @@
   "rules": {
     "eqeqeq": "off",
     "curly": "error",
-    "quotes": ["error", "double"]
+    "quotes": ["error", "double"],
+    "allow": ["_bar"]
   }
 }
