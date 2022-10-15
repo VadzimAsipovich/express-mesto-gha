@@ -20,7 +20,11 @@ module.exports.getUser = (req, res) => {
         _id: user._id,
       });
     })
-    .catch(() => {
+    .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(400).send({ message: "Передан некорректный id пользователя" });
+        return;
+      }
       res.status(500).send({ message: "Произошла ошибка" });
     });
 };
