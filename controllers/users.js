@@ -8,18 +8,20 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
-    .then((user) => res.send({
-      name: user.name,
-      about: user.about,
-      avatar: user.avatar,
-      _id: user._id,
-    }))
-    .catch((err) => {
-      if (err.name === "CastError") {
-        res.status(404).send({ message: "Пользователь по заданному id отсутствует в базе" });
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: "Пользователь с указанным _id не найден." });
         return;
       }
-      res.status(500).send(err);
+      res.send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        _id: user._id,
+      });
+    })
+    .catch(() => {
+      res.status(500).send({ message: "Произошла ошибка" });
     });
 };
 
@@ -30,10 +32,10 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(404).send({ message: "Переданы некорректные данные при создании пользователя" });
+        res.status(400).send({ message: "Переданы некорректные данные при создании пользователя" });
         return;
       }
-      res.status(500).send(err);
+      res.status(500).send({ message: "Произошла ошибка" });
     });
 };
 
@@ -57,7 +59,7 @@ module.exports.updateProfile = (req, res) => {
         res.status(400).send({ message: "Переданы некорректные данные при обновлении профиля." });
         return;
       }
-      res.status(500).send(err);
+      res.status(500).send({ message: "Произошла ошибка" });
     });
 };
 
@@ -81,6 +83,6 @@ module.exports.updateAvatar = (req, res) => {
         res.status(400).send({ message: "Переданы некорректные данные при создании пользователя" });
         return;
       }
-      res.status(500).send(err);
+      res.status(500).send({ message: "Произошла ошибка" });
     });
 };
