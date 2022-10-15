@@ -78,7 +78,7 @@ module.exports.updateAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(404).send({ message: "Переданы некорректные данные при создании пользователя" });
+        res.status(400).send({ message: "Переданы некорректные данные при создании пользователя" });
         return;
       }
       res.status(500).send(err);
