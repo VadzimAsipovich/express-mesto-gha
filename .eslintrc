@@ -4,6 +4,6 @@
     "eqeqeq": "off",
     "curly": "error",
     "quotes": ["error", "double"],
-    "allow": ["_bar"]
+    "no-underscore-dangle":  ["error", { "allow": ["_id"] }]
   }
 }
