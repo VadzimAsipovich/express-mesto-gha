@@ -1,7 +1,7 @@
 {
   "name": "express-mesto-gha",
   "version": "1.0.0",
-  "description": "none",
+  "description": "learning project, provides information for Mesto front-end",
   "main": "app.js",
   "scripts": {
     "lint": "npx eslint .",
