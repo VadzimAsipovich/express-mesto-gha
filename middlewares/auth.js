@@ -4,7 +4,6 @@ const BadRequestError = require('../errors/bad-request-err');
 
 module.exports = (req, res, next) => {
   const { jwt } = req.cookies;
-  console.log(jwt);
 
   if (!jwt) {
     throw new UnauthorizedError('Необходима авторизация');
