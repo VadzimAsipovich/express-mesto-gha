@@ -1,4 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
+const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const express = require('express');
 const { errors } = require('celebrate');
@@ -12,7 +13,7 @@ const auth = require('./middlewares/auth');
 const { PORT = 3000 } = process.env;
 
 const app = express();
-
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

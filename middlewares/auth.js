@@ -1,18 +1,18 @@
-const jwt = require('jsonwebtoken');
+const jwtApp = require('jsonwebtoken');
 const UnauthorizedError = require('../errors/unauthorized-err');
 const BadRequestError = require('../errors/bad-request-err');
 
 module.exports = (req, res, next) => {
-  const { authorization } = req.headers;
+  const { jwt } = req.cookies;
+  console.log(jwt);
 
-  if (!authorization || !authorization.startsWith('Bearer ')) {
+  if (!jwt) {
     throw new UnauthorizedError('Необходима авторизация');
   }
 
-  const token = authorization.replace('Bearer ', '');
   let payload;
   try {
-    payload = jwt.verify(token, 'some-secret-key');
+    payload = jwtApp.verify(jwt, 'some-secret-key');
   } catch (err) {
     if (err.message === 'jwt malformed') {
       throw new BadRequestError('Некорректный токен');
