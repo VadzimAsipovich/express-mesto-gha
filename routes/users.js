@@ -12,7 +12,15 @@ const urlPattern = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9(
 
 router.get('/', getUsers);
 router.get('/me', getCurrentUser);
-router.get('/:userId', getUser);
+router.get(
+  '/:userId',
+  celebrate({
+    params: Joi.object().keys({
+      userId: Joi.string().alphanum().length(24),
+    }),
+  }),
+  getUser,
+);
 router.patch(
   '/me',
   celebrate({
