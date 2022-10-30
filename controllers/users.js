@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
-const ConflictError = require('../errors/not-found-err');
+const ConflictError = require('../errors/conflict-err');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -60,6 +60,7 @@ module.exports.createUser = (req, res, next) => {
         throw new BadRequestError('Некорректный формат email или passoword');
       }
       if (err.code === 11000) {
+        console.log(1);
         throw new ConflictError('Пользователь с таким email уже существует');
       }
       next(err);
