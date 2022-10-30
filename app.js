@@ -10,6 +10,9 @@ const {
 } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 
+const urlPattern = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+const emailPattern = /^\S+@\S+\.\S+$/;
+
 const { PORT = 3000 } = process.env;
 
 const app = express();
@@ -23,8 +26,9 @@ app.post(
     body: Joi.object().keys({
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
-      email: Joi.string().required(),
+      email: Joi.string().required().regex(emailPattern),
       password: Joi.string().required().min(8),
+      avatar: Joi.string().regex(urlPattern),
     }).unknown(true),
   }),
   createUser,
