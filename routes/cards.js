@@ -19,7 +19,15 @@ router.post(
   }),
   createCard,
 );
-router.delete('/:cardId', deleteCard);
+router.delete(
+  '/:cardId',
+  celebrate({
+    params: Joi.object().keys({
+      cardId: Joi.string().alphanum().length(24),
+    }),
+  }),
+  deleteCard,
+);
 router.put('/:cardId/likes', likeCard);
 router.delete('/:cardId/likes', dislikeCard);
 
