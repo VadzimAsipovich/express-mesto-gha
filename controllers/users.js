@@ -46,15 +46,15 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => res.send({
-      data: {
+    .then((user) => res.send(
+      {
         user: user.name,
         email: user.email,
         about: user.about,
         avatar: user.avatar,
         _id: user._id,
       },
-    }))
+    ))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new BadRequestError('Некорректный формат email или passoword');
