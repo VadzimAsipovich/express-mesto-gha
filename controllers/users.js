@@ -26,11 +26,10 @@ module.exports.getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Передан некорректный id пользователя');
+        next(new BadRequestError('Передан некорректный id пользователя'));
       }
       next(err);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -57,15 +56,13 @@ module.exports.createUser = (req, res, next) => {
     ))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadRequestError('Некорректный формат email или passoword');
+        next(new BadRequestError('Некорректный формат email или passoword'));
       }
       if (err.code === 11000) {
-        console.log(1);
-        throw new ConflictError('Пользователь с таким email уже существует');
+        next(new ConflictError('Пользователь с таким email уже существует'));
       }
       next(err);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.updateProfile = (req, res, next) => {
@@ -84,11 +81,10 @@ module.exports.updateProfile = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        throw new BadRequestError('Некорректный формат email или passoword');
+        next(new BadRequestError('Некорректный формат email или passoword'));
       }
       next(err);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -107,9 +103,9 @@ module.exports.updateAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadRequestError(
+        next(new BadRequestError(
           'Переданы некорректные данные при создании пользователя',
-        );
+        ));
       }
       next(err);
     })
