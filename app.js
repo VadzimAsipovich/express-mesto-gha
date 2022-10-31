@@ -9,11 +9,8 @@ const {
   createUser,
 } = require('./controllers/users');
 const auth = require('./middlewares/auth');
-
 const NotFoundError = require('./errors/not-found-err');
-
-const urlPattern = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
-const emailPattern = /^\S+@\S+\.\S+$/;
+const { urlPattern, emailPattern } = require('./utils/patterns');
 
 const { PORT = 3000 } = process.env;
 
