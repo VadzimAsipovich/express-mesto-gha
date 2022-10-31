@@ -24,11 +24,10 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        throw new BadRequestError('Переданы некорректные данные при создании карточки.');
+        next(new BadRequestError('Переданы некорректные данные при создании карточки.'));
       }
       next(err);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -41,16 +40,16 @@ module.exports.deleteCard = (req, res, next) => {
         throw new ForbiddenError('Текущий пользователь не может удалить эту карточку.');
       }
       Card.findByIdAndRemove(req.params.cardId).then((deletedCard) => {
-        res.send({ data: deletedCard });
+        res.send({ data: deletedCard })
+          .catch(next);
       });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Передан некорректный id карточки');
+        next(new BadRequestError('Передан некорректный id карточки'));
       }
       next(err);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
@@ -66,11 +65,10 @@ module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
   })
   .catch((err) => {
     if (err.name === 'CastError') {
-      throw new BadRequestError('Передан некорректный id карточки');
+      next(new BadRequestError('Передан некорректный id карточки'));
     }
     next(err);
-  })
-  .catch(next);
+  });
 
 module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   req.params.cardId,
@@ -85,8 +83,7 @@ module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   })
   .catch((err) => {
     if (err.name === 'CastError') {
-      throw new BadRequestError('Передан некорректный id карточки');
+      next(new BadRequestError('Передан некорректный id карточки'));
     }
     next(err);
-  })
-  .catch(next);
+  });
