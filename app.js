@@ -1,16 +1,12 @@
-const { celebrate, Joi } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const express = require('express');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
-const {
-  login,
-  createUser,
-} = require('./controllers/users');
+const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found-err');
-const { urlPattern, emailPattern } = require('./utils/patterns');
+const { validateUserBody, validateAuth } = require('./middlewares/validation');
 
 const { PORT = 3000 } = process.env;
 
@@ -19,27 +15,10 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post(
-  '/signup',
-  celebrate({
-    body: Joi.object().keys({
-      name: Joi.string().min(2).max(30),
-      about: Joi.string().min(2).max(30),
-      email: Joi.string().required().regex(emailPattern),
-      password: Joi.string().required(),
-      avatar: Joi.string().regex(urlPattern),
-    }),
-  }),
-  createUser,
-);
+app.post('/signup', validateUserBody, createUser);
 app.post(
   '/signin',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().required().regex(emailPattern),
-      password: Joi.string().required(),
-    }),
-  }),
+  validateAuth,
   login,
 );
 
