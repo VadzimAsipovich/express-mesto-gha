@@ -15,7 +15,7 @@ module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        next(new NotFoundError('Пользователь с указанным _id не найден.'));
+        throw new NotFoundError('Пользователь с указанным _id не найден.');
       }
       res.send({
         name: user.name,
@@ -26,10 +26,11 @@ module.exports.getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Передан некорректный id пользователя'));
+        throw new BadRequestError('Передан некорректный id пользователя');
       }
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -56,13 +57,15 @@ module.exports.createUser = (req, res, next) => {
     ))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректный формат email или passoword'));
+        throw new BadRequestError('Некорректный формат email или passoword');
       }
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже существует'));
+        console.log(1);
+        throw new ConflictError('Пользователь с таким email уже существует');
       }
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 module.exports.updateProfile = (req, res, next) => {
@@ -75,16 +78,17 @@ module.exports.updateProfile = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        next(new NotFoundError('Пользователь с указанным _id не найден.'));
+        throw new NotFoundError('Пользователь с указанным _id не найден.');
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректный формат email или passoword'));
+        throw new BadRequestError('Некорректный формат email или passoword');
       }
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -97,18 +101,19 @@ module.exports.updateAvatar = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        next(new NotFoundError('Пользователь с указанным _id не найден.'));
+        throw new NotFoundError('Пользователь с указанным _id не найден.');
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError(
+        throw new BadRequestError(
           'Переданы некорректные данные при создании пользователя',
-        ));
+        );
       }
       next(err);
-    });
+    })
+    .catch(next);
 };
 
 module.exports.login = (req, res, next) => {
