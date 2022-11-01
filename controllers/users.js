@@ -27,8 +27,9 @@ module.exports.getUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Передан некорректный id пользователя'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -57,11 +58,11 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректный формат email или passoword'));
-      }
-      if (err.code === 11000) {
+      } else if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже существует'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -82,8 +83,9 @@ module.exports.updateProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError('Некорректный формат email или passoword'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -106,8 +108,9 @@ module.exports.updateAvatar = (req, res, next) => {
         next(new BadRequestError(
           'Переданы некорректные данные при создании пользователя',
         ));
+      } else {
+        next(err);
       }
-      next(err);
     })
     .catch(next);
 };
